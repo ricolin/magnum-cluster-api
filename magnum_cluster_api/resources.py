@@ -2384,6 +2384,10 @@ def mutate_machine_deployment(
                         "name": "imageUUID",
                         "value": utils.get_image_uuid(node_group.image_id, context),
                     },
+                    {
+                        "name": "ports",
+                        "value": utils.get_ports(cluster.labels.get("ports", "[]"), context),
+                    },
                 ],
             },
         }
@@ -2393,7 +2397,7 @@ def mutate_machine_deployment(
 
 
 def generate_machine_deployments_for_cluster(
-    context: context.RequestContext, cluster: objects.Cluster
+    context: context.RequestContext, cluster: magnum_objects.Cluster
 ) -> list:
     machine_deployments = []
     for ng in cluster.nodegroups:

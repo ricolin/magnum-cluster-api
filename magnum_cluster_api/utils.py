@@ -417,6 +417,97 @@ def get_operating_system(cluster: magnum_objects.Cluster):
             return ops
     return None
 
+def get_ports(ports: str, ctx: context.RequestContext):
+    """Get Ports
+
+    :param ports: PortOpts list in string
+    """
+    return json.loads(ports)
+    #Remove this
+    """
+# docs/book/src/clusteropenstack/configuration.md
+      ports:
+        - network:
+            id: <your-network-id>
+          fixedIPs:
+            - subnet:
+                id: <your-subnet-id>
+              ipAddress: <your-fixed-ip>
+            - subnet:
+                name: <your-subnet-name>
+                tags:
+                  - tag1
+                  - tag2
+          nameSuffix: <your-port-name>
+          description: <your-custom-port-description>
+          vnicType: normal
+          securityGroups:
+            - <your-security-group-id>
+          profile:
+            capabilities:
+              - <capability>
+
+
+    # cluster-api-provider-openstack/api/v1alpha7/openstackmachine_types.go
+type OpenStackMachineSpec struct {
+    // Ports to be attached to the server instance. They are created if a port with the given name does not already exist.
+    // If not specified a default port will be added for the default cluster network.
+    Ports []PortOpts `json:"ports,omitempty"`
+
+api/v1alpha7/types.go
+type PortOpts struct {
+    // Network is a query for an openstack network that the port will be created or discovered on.
+    // This will fail if the query returns more than one network.
+    Network *NetworkFilter `json:"network,omitempty"`
+    // Used to make the name of the port unique. If unspecified, instead the 0-based index of the port in the list is used.
+    NameSuffix   string `json:"nameSuffix,omitempty"`
+    Description  string `json:"description,omitempty"`
+    AdminStateUp *bool  `json:"adminStateUp,omitempty"`
+    MACAddress   string `json:"macAddress,omitempty"`
+    // Specify pairs of subnet and/or IP address. These should be subnets of the network with the given NetworkID.
+    FixedIPs []FixedIP `json:"fixedIPs,omitempty"`
+    // The names, uuids, filters or any combination these of the security groups to assign to the instance
+    SecurityGroupFilters []SecurityGroupFilter `json:"securityGroupFilters,omitempty"`
+    AllowedAddressPairs  []AddressPair         `json:"allowedAddressPairs,omitempty"`
+    // Enables and disables trunk at port level. If not provided, openStackMachine.Spec.Trunk is inherited.
+    Trunk *bool `json:"trunk,omitempty"`
+
+    // The ID of the host where the port is allocated
+    HostID string `json:"hostId,omitempty"`
+
+    // The virtual network interface card (vNIC) type that is bound to the neutron port.
+    VNICType string `json:"vnicType,omitempty"`
+
+    // Profile is a set of key-value pairs that are used for binding details.
+    // We intentionally don't expose this as a map[string]string because we only want to enable
+    // the users to set the values of the keys that are known to work in OpenStack Networking API.
+    // See https://docs.openstack.org/api-ref/network/v2/index.html?expanded=create-port-detail#create-port
+    Profile BindingProfile `json:"profile,omitempty"`
+
+    // DisablePortSecurity enables or disables the port security when set.
+    // When not set, it takes the value of the corresponding field at the network level.
+    DisablePortSecurity *bool `json:"disablePortSecurity,omitempty"`
+
+    // PropageteUplinkStatus enables or disables the propagate uplink status on the port.
+    PropagateUplinkStatus *bool `json:"propagateUplinkStatus,omitempty"`
+
+    // Tags applied to the port (and corresponding trunk, if a trunk is configured.)
+    // These tags are applied in addition to the instance's tags, which will also be applied to the port.
+    // +listType=set
+    Tags []string `json:"tags,omitempty"`
+
+    // Value specs are extra parameters to include in the API request with OpenStack.
+    // This is an extension point for the API, so what they do and if they are supported,
+    // depends on the specific OpenStack implementation.
+    // +optional
+    // +listType=map
+    // +listMapKey=name
+    ValueSpecs []ValueSpec `json:"valueSpecs,omitempty"`
+
+
+
+    """
+
 
 def get_image_uuid(image_ref: str, ctx: context.RequestContext):
     """Get image uuid from image ref
