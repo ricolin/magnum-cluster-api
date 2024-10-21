@@ -1200,16 +1200,19 @@ class ClusterClass(Base):
                                                 },
                                             },
                                             "fixedIPs": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "ipAddress": {
-                                                        "type": "string",
-                                                    },
-                                                    "subnet": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "id": {
-                                                                "type": "string",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "ipAddress": {
+                                                            "type": "string",
+                                                        },
+                                                        "subnet": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "string",
+                                                                },
                                                             },
                                                         },
                                                     },
