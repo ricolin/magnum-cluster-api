@@ -1183,6 +1183,44 @@ class ClusterClass(Base):
                             },
                         },
                         {
+                            "name": "ports",
+                            "required": False,
+                            "schema": {
+                                "openAPIV3Schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "network": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                    },
+                                                },
+                                            },
+                                            "fixedIPs": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "ipAddress": {
+                                                        "type": "string",
+                                                    },
+                                                    "subnet": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        {
                             "name": "kubeletTLSCipherSuites",
                             "required": True,
                             "schema": {
@@ -1475,6 +1513,30 @@ class ClusterClass(Base):
                                                     """
                                                 ),
                                             },
+                                        },
+                                    ],
+                                }
+                            ],
+                        },
+                        {
+                            "name": "extraNetwork",
+                            "definitions": [
+                                {
+                                    "selector": {
+                                        "apiVersion": objects.OpenStackMachineTemplate.version,
+                                        "kind": objects.OpenStackMachineTemplate.kind,
+                                        "matchResources": {
+                                            "controlPlane": True,
+                                            "machineDeploymentClass": {
+                                                "names": ["default-worker"],
+                                            },
+                                        },
+                                    },
+                                    "jsonPatches": [
+                                        {
+                                            "op": "add",
+                                            "path": "/spec/template/spec/ports",
+                                            "valueFrom": {"variable": "ports"},
                                         },
                                     ],
                                 }
@@ -2667,6 +2729,13 @@ class Cluster(ClusterBase):
                                 "name": "imageUUID",
                                 "value": utils.get_image_uuid(
                                     self.cluster.default_ng_master.image_id,
+                                    self.context,
+                                ),
+                            },
+                            {
+                                "name": "ports",
+                                "value": utils.get_ports(
+                                    self.cluster.labels.get("ports", "[]"),
                                     self.context,
                                 ),
                             },
