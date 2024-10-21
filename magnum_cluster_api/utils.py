@@ -422,7 +422,10 @@ def get_ports(ports: str, ctx: context.RequestContext):
 
     :param ports: PortOpts list in string
     """
-    return json.loads(ports)
+    print("A"*100)
+    print(ports)
+    print(json.loads(ports))
+    return json.loads(ports) or []
     #Remove this
     """
 # docs/book/src/clusteropenstack/configuration.md
