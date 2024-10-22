@@ -1529,7 +1529,6 @@ class ClusterClass(Base):
                                         "apiVersion": objects.OpenStackMachineTemplate.version,
                                         "kind": objects.OpenStackMachineTemplate.kind,
                                         "matchResources": {
-                                            "controlPlane": True,
                                             "machineDeploymentClass": {
                                                 "names": ["default-worker"],
                                             },
